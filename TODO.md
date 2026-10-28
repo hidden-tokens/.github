@@ -169,7 +169,7 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 ### P3.3 — Code ownership and review conventions
 
 - [x] Decide whether a root `CODEOWNERS` file is appropriate.  (yes — `.github/CODEOWNERS`, this repo only)
-- [x] Define ownership only for real maintainers or teams.  (`@moughamir` — the org owner, verified; no invented identities)
+- [x] Define ownership only for real maintainers or teams.  (`@tokenimizer` — verified org member; corrected from `@moughamir` same day per owner instruction)
 - [x] Document review expectations and approval responsibilities.  (in the CODEOWNERS header: PR trail is the review of record; single-maintainer self-approval)
 - [x] Do not invent GitHub usernames, teams, or reviewer identities.  (one real owner; no teams exist)
 - [x] Align ownership rules with actual repository permissions.  (org-owner account, admin:org verified)
@@ -365,8 +365,9 @@ resolution steps, all field-tested.
 
 **Deferred (open decisions / future work, tracked here):**
 
-1. **LICENSE** — an explicit org licensing decision is pending (P3.4). Until
-   decided, the public repo is all-rights-reserved by default.
+1. **LICENSE** — decided 2026-10-28: **stay closed.** No license file is
+   added (public repo remains all-rights-reserved by default). Recorded in
+   `docs/repository-metadata.md`.
 2. **Rust/Tauri CI profile** — the primary product CI profile (cargo
    fmt/check/clippy/test + Tauri build matrix) lands with the first product
    repo; the reusable-ci input surface was designed to extend without
