@@ -11,7 +11,6 @@ Welcome to Hidden Tokens. Here is where to get help.
 ## Ask the team
 
 - **Email:** [info@hiddentokens.com](mailto:info@hiddentokens.com)
-- **WhatsApp:** [Contact Hidden Tokens](https://wa.me/212680092567)
 
 Please **do not send confidential documents** through these channels — describe the situation instead, and use fictional examples.
 
