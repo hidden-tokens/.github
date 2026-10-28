@@ -70,9 +70,21 @@ Older/inactive repos (145 total non-fork under moughamir) are out of audit scope
 
 **Duplication rule (contract):** repositories already running CI (dex, owa, turi-plugin, zawia-jeu, sout, wafine) keep their pipelines; only the security workflow may be layered where a pipeline lacks secret scanning (owa's own `security-scan.yml` already covers it — no addition).
 
-## Pilot-preselection (for P5.2, decision owner: product lead)
+## Pilot selection (for P5.2, corrected by maintainer 2026-10-28)
 
-Candidates with zero existing CI and TypeScript/bun shapes: **atre-vfs, bttf, moughamir.github.io** (CI layer only, keep its deploy), and the two `buildmaroc-chantik-*` repos as a pair. Recommendation: pilot on `bttf` (small, public, single-package) after the P2.2/P2.3 retrofit.
+**Pilot: `hidden-tokens/core`** — the org's own shared open-core repository (maintainer scope:
+
+- editor configs, dev-env bootstrapping, agents, 2nd-brain setups);
+
+- first product/surface repo that lives *inside* the org, so the pilot proves what students
+
+- need it to prove: org defaults + explicit workflow callers running on org reality.
+
+~~Preselected: bttf~~ — struck: it lives under the `moughamir` personal account; Hidden
+
+Tokens is strictly its own org, so user-scope repos are out of the pilot's proof value.
+
+`bttf` remains a good *example* in the P2.4 caller docs, just not a pilot.
 
 ## Existing shared-workflow status (inputs to P2.2/P2.3 retrofit)
 
