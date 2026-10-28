@@ -9,6 +9,10 @@ name: Security (reusable)
 #   on:
 #     push: { branches: [main] }
 #     pull_request:
+#   permissions:
+#     contents: read
+#     pull-requests: read
+#     security-events: write
 #   jobs:
 #     security:
 #       uses: hidden-tokens/.github/.github/workflows/reusable-security.yml@main
@@ -17,6 +21,13 @@ name: Security (reusable)
 #
 # Free-tier only: no GitHub Advanced Security required for secret scanning
 # (Trufflehog) or dependency review. CodeQL is free for public repositories.
+#
+# PERMISSIONS CONTRACT (learned hard way, 2026-10-28):
+#   A reusable workflow (workflow_call-only) must NOT declare `pull-requests`
+#   in its own permissions block — GitHub rejects the whole workflow at
+#   validation with an undiagnosable 'startup_failure'. The CALLER grants
+#   `pull-requests: read` (needed by the dependency-review job) and it
+#   cascades into the called workflow.
 #
 # Calls on private repositories: CodeQL needs GHAS — leave codeql-languages
 # empty to skip it. Trufflehog and dependency review work everywhere.
@@ -40,7 +51,6 @@ on:
 permissions:
   contents: read
   security-events: write
-  pull-requests: read
 
 jobs:
   secret-scan:
@@ -60,7 +70,7 @@ jobs:
           # PRs: scan pull-request diff. Push: scan full history.
           base: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
           head: ${{ github.event_name == 'pull_request' && 'HEAD' || '' }}
-          extra_args: --only-verified --no-update
+          extra_args: --only-verified
 
   dependency-review:
     name: Dependency review
