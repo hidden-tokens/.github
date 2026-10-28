@@ -26,7 +26,7 @@ on:
         type: string
         default: ubuntu-latest
       working-directory:
-        description: Directory containing the package (monorepo: point at a workspace)
+        description: Directory containing the package (monorepo — point at a workspace)
         type: string
         default: "."
       package-manager:
@@ -38,7 +38,7 @@ on:
         type: string
         default: "22"
       lint:
-        description: Run the lint script (lint:check if defined, else lint)
+        description: Run the lint script (lint-check if defined, else lint)
         type: boolean
         default: true
       typecheck:
