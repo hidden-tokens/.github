@@ -1,0 +1,15 @@
+# Code ownership for hidden-tokens/.github
+#
+# Single-maintainer organization: the org owner reviews everything.
+# Ownership is NOT inherited by other org repositories — each repository
+# that wants review routing carries its own CODEOWNERS file.
+
+# Global fallback — everything in this repository.
+* @moughamir
+
+# Review expectations (documented, not enforced by GitHub):
+# - Every change lands as a PR into `develop`; direct pushes to `main` are
+#   never made.
+# - The owner self-approves in practice (single-maintainer reality); the PR
+#   trail, not the approval ceremony, is the review of record.
+# - Workflow changes additionally require a green `Workflow validation` run.
