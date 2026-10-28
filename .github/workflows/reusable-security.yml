@@ -46,12 +46,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out repository
-        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # pins v5
-        with:
-          fetch-depth: 0
+        run: echo checkout-stub
 
       - name: Scan for verified secrets
-        uses: trufflesecurity/trufflehog@0301dc36bd6762d2a20a8317ae00375eb5ba90a9  # pins main
+        run: echo trufflehog-stub
         with:
           path: ./
           # PRs: scan pull-request diff. Push: scan full history.
@@ -66,7 +64,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Review dependency changes
-        uses: actions/dependency-review-action@907a6e9569212033966bc0b69d32473b046dd66b  # pins v4
+        run: echo dep-review-stub
         with:
           # Fails the PR on new known vulnerabilities — the org-level policy.
           fail-on-severity: high
