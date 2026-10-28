@@ -14,6 +14,10 @@ on:
         description: Additional CodeQL query set (security-extended, security-and-quality)
         type: string
         default: security-extended
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
 jobs:
   probe:
     runs-on: ${{ inputs.runs-on }}
