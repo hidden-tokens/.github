@@ -75,21 +75,21 @@ jobs:
       PM_INSTALL: ${{ inputs.package-manager == 'bun' && 'bun install --frozen-lockfile' || inputs.package-manager == 'pnpm' && 'pnpm install --frozen-lockfile' || 'npm ci' }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # pins v5
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # main HEAD, 2026-10-28
 
       - name: Install bun (latest)
         if: inputs.package-manager == 'bun'
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6  # pins v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6  # main HEAD, 2026-10-28
 
       - name: Install pnpm
         if: inputs.package-manager == 'pnpm'
-        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413  # pins v4
+        uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413  # main HEAD, 2026-10-28
         with:
           run_install: false
 
       - name: Set up Node
         if: inputs.package-manager != 'bun'
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # pins v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # main HEAD, 2026-10-28
         with:
           node-version: ${{ inputs.node-version }}
           cache: ${{ inputs.package-manager }}

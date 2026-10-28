@@ -19,8 +19,9 @@ name: Security (reusable)
 #       with:
 #         codeql-languages: typescript,javascript
 #
-# Free-tier only: no GitHub Advanced Security required for secret scanning
-# (Trufflehog) or dependency review. CodeQL is free for public repositories.
+# Free tier: secret scanning via Trufflehog and PR dependency review in "auto"
+# mode stay free; full dependency review on private repositories requires
+# GitHub Advanced Security. CodeQL is free for public repositories (GHAS on private).
 #
 # PERMISSIONS CONTRACT (learned hard way, 2026-10-28):
 #   A reusable workflow (workflow_call-only) must NOT declare `pull-requests`
@@ -30,7 +31,8 @@ name: Security (reusable)
 #   cascades into the called workflow.
 #
 # Calls on private repositories: CodeQL needs GHAS — leave codeql-languages
-# empty to skip it. Trufflehog and dependency review work everywhere.
+# empty to skip it. Trufflehog works everywhere. Dependency review: see the
+# "auto" input default — public repos run it, private repos need GHAS or opt-out.
 
 on:
   workflow_call:
@@ -63,12 +65,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out repository
-        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # pins v5
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # main HEAD, 2026-10-28
         with:
           fetch-depth: 0
 
       - name: Scan for verified secrets
-        uses: trufflesecurity/trufflehog@0301dc36bd6762d2a20a8317ae00375eb5ba90a9  # pins main
+        uses: trufflesecurity/trufflehog@0301dc36bd6762d2a20a8317ae00375eb5ba90a9  # main HEAD, 2026-10-28
         with:
           path: ./
           # PRs: scan pull-request diff. Push: scan full history.
@@ -88,7 +90,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Review dependency changes
-        uses: actions/dependency-review-action@907a6e9569212033966bc0b69d32473b046dd66b  # pins v4
+        uses: actions/dependency-review-action@907a6e9569212033966bc0b69d32473b046dd66b  # main HEAD, 2026-10-28
         with:
           # Fails the PR on new known vulnerabilities — the org-level policy.
           fail-on-severity: high
@@ -103,16 +105,16 @@ jobs:
       security-events: write
     steps:
       - name: Check out repository
-        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # pins v5
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # main HEAD, 2026-10-28
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # pins v3
+        uses: github/codeql-action/init@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # main HEAD, 2026-10-28
         with:
           languages: ${{ inputs.codeql-languages }}
           queries: ${{ inputs.codeql-queries }}
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # pins v3
+        uses: github/codeql-action/autobuild@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # main HEAD, 2026-10-28
 
       - name: Analyze
-        uses: github/codeql-action/analyze@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # pins v3
+        uses: github/codeql-action/analyze@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # main HEAD, 2026-10-28
