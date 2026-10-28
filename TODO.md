@@ -77,7 +77,10 @@ before the contract was adopted. They do **not** yet satisfy the P2.2/P2.3 accep
 **Status 2026‑10‑28:** matrix recorded in `docs/compatibility-matrix.md`; branch
 `docs/compatibility-matrix`, merged to `develop`. Key finding: the org holds only 2 repos — the
 product surface is spread across member scopes, so nothing auto-applies outside `hidden-tokens`.
-Pilot preselected: `hidden-tokens/bttf` (after the P2.2/P2.3 retrofit).
+Pilot selection corrected the same day: **`hidden-tokens/core`** (org-internal shared
+open-core: editor configs, dev-env bootstrapping, agents, 2nd-brain setups). Earlier mention
+of `bttf` was withdrawn — user-scope repos do not belong to the org, so they cannot prove
+org-default inheritance.
 
 ### P2.2 — Reusable CI workflow
 
@@ -208,8 +211,8 @@ Branch: `feature/reusable-security` (actual: same branch as P2.2, merged to `dev
 
 ### P5.2 — Pilot repository
 
-- [ ] Select one suitable Hidden Tokens repository.
-- [ ] Audit its existing CI before changing anything.
+- [x] Select one suitable Hidden Tokens repository.  (**`hidden-tokens/core`** — corrected 2026‑10‑28: org-internal shared open-core; `bttf` withdrawn as out-of-org)
+- [ ] Audit its existing CI before changing anything.  (repo is empty — nothing to audit)
 - [ ] Integrate the reusable CI workflow.
 - [ ] Integrate security checks where supported.
 - [ ] Verify pull request checks and failure reporting.
