@@ -1,0 +1,64 @@
+name: Bug report
+description: Report something that does not work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Before you continue — privacy matters here.**
+        Do **not** paste confidential documents, real names, identifiers, amounts, screenshots showing real data, or token↔value mappings into this issue. Everything you write is public. Describe the *shape* of the problem, not the sensitive content itself.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the problem. If you can, explain what you expected to happen instead.
+      placeholder: Token replacement did not run on the second page of a multi-page document…
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps someone could follow with a **non-sensitive example document**.
+      placeholder: |
+        1. Open a sample document with two lines marked for tokenization
+        2. Run tokenization with default settings
+        3. Send the result to the AI tool
+        4. Restore the mapping — one token comes back unresolved
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where does it happen?
+      options:
+        - Desktop app
+        - Browser extension
+        - Docs / Academy
+        - Other / not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App or extension version
+      description: Found in the app's about/settings, or the extension's details page.
+      placeholder: e.g. 1.4.2
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Not applicable
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots (optional)
+      description: Only if they help and **after redacting any real identifiers**. Logs are public once submitted.

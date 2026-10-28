@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & how-to
+    url: https://hiddentokens.com/academy/
+    about: Guides and learning resources for getting the most out of Hidden Tokens.
+  - name: Product support
+    url: mailto:info@hiddentokens.com
+    about: General questions, licensing, and account support. Do not send confidential documents by email.
+  - name: Chat with the team
+    url: https://wa.me/212680092567
+    about: Quick questions and feedback via WhatsApp.
+  - name: Privacy information
+    url: https://hiddentokens.com/privacy/
+    about: How Hidden Tokens handles data and what stays local.

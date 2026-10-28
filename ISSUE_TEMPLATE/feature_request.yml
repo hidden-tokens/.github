@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest an improvement or a new capability.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        💡 Feature ideas that help shape the product are welcome. As always — do **not** include real names, identifiers, amounts, confidential documents, or token↔value mappings. Describe use cases in generic terms.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem or use case
+      description: What workflow are you trying to achieve, and where does Hidden Tokens fall short today? Generic descriptions only.
+      placeholder: When preparing contracts, several related entities share the same surname — one token per value loses that grouping…
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What would you like to happen? What would success look like for you?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Workarounds or alternatives
+      description: Have you found another way to handle this today?
+  - type: checkboxes
+    id: privacy-relevance
+    attributes:
+      label: Privacy relevance
+      description: Does this feature affect what content gets shared with an AI service?
+      options:
+        - label: This feature would change what is sent to the AI service
+        - label: This feature affects how tokens or mappings are stored/restored
+        - label: Not privacy-relevant (e.g. UI polish, performance)
+  - type: checkboxes
+    id: participation
+    attributes:
+      label: Participation
+      options:
+        - label: I would be willing to help test this feature when available
