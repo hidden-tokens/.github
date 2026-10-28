@@ -88,12 +88,17 @@ Branch: `feature/reusable-ci` (actual: `feature/p2-workflows`, merged to `develo
 - [x] Support configurable checkout, runtime setup, dependency installation, linting, testing, and building where justified.
 - [x] Avoid assuming every project uses the same language or package manager.
 - [x] Set explicit, minimum workflow permissions.
-- [ ] Pin third-party actions to verified full commit SHAs.
-- [ ] Add timeouts and sensible failure behavior.
+- [x] Pin third-party actions to verified full commit SHAs.
+- [x] Add timeouts and sensible failure behavior.
 - [x] Document how callers pass inputs and consume results.
 - [x] Validate workflow syntax (PyYAML) and reusable-workflow semantics.
 
 **Acceptance criteria: NOT MET —** a minimal test repository or fixture invoking the workflow successfully is still pending.
+
+**Source note:** action SHAs resolved 2026‑10‑28 via `git ls-remote` (8 third-party repos, 11
+`uses:` refs across the three workflows + per-job `timeout-minutes`). Created by
+`feature/workflow-pinning` per the jev-assisted decision path (cut `develop → main` right
+after this merge; consolidation deferred until after the pilot).
 
 ### P2.3 — Reusable security workflow
 
@@ -104,7 +109,7 @@ Branch: `feature/reusable-security` (actual: same branch as P2.2, merged to `dev
 - [x] Evaluate supported static analysis and dependency scanning options.  (Trufflehog secret scan; CodeQL optional, off by default)
 - [x] Make language-specific checks configurable.  (codeql-languages input)
 - [x] Use least-privilege permissions and avoid unnecessary secrets.
-- [ ] Pin third-party actions to full commit SHAs.
+- [x] Pin third-party actions to full commit SHAs.
 - [x] Document required GitHub features, permissions, and billing constraints.  (header notes free-tier vs GHAS)
 - [ ] Test successful and failing scenarios where practical.
 
