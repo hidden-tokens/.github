@@ -11,8 +11,14 @@ This repository holds the organization-wide defaults for all [hidden-tokens](htt
 | [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | Community standards |
 | [`SECURITY.md`](SECURITY.md) | How to report a vulnerability |
 | [`SUPPORT.md`](SUPPORT.md) | Where to get help |
+| [`.github/workflows/reusable-ci.yml`](.github/workflows/reusable-ci.yml) | Reusable CI pipeline — lint, typecheck, test, build |
+| [`.github/workflows/reusable-security.yml`](.github/workflows/reusable-security.yml) | Reusable security pipeline — secret scan, dependency review, optional CodeQL |
 
 Individual product repositories may override any of these by providing their own copy.
+
+## Reusable workflows
+
+Unlike the community files above, reusable workflows do **not** apply automatically — each repository must call them from its own `.github/workflows/`. See the header of each workflow file for the exact `uses:` invocation, per-repo inputs (`package-manager`, `working-directory`, `codeql-languages`, …), and tunable stages.
 
 ## The privacy rule
 

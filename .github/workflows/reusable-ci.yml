@@ -1,0 +1,149 @@
+---
+name: CI (reusable)
+
+# Reusable CI pipeline for hidden-tokens repositories.
+#
+# Usage from a repository's own workflow:
+#
+#   name: CI
+#   on:
+#     push: { branches: [main] }
+#     pull_request:
+#   jobs:
+#     ci:
+#       uses: hidden-tokens/.github/.github/workflows/reusable-ci.yml@main
+#       with:
+#         package-manager: bun
+#
+# Each stage runs conditionally (skipped when its input is false), but the
+# pipeline still reports success — safe to mark as a required check.
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: Runner to execute on
+        type: string
+        default: ubuntu-latest
+      working-directory:
+        description: Directory containing the package (monorepo: point at a workspace)
+        type: string
+        default: "."
+      package-manager:
+        description: Which tool installs and runs scripts — bun, npm or pnpm
+        type: string
+        default: bun
+      node-version:
+        description: Node.js version to install
+        type: string
+        default: "22"
+      lint:
+        description: Run the lint script (lint:check if defined, else lint)
+        type: boolean
+        default: true
+      typecheck:
+        description: Run the typecheck script (falls back to tsc --noEmit)
+        type: boolean
+        default: true
+      test:
+        description: Run the test script (falls back to <pm> test)
+        type: boolean
+        default: true
+      build:
+        description: Run the build script
+        type: boolean
+        default: true
+      audit:
+        description: Run the dependency audit step
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Lint · typecheck · test · build
+    runs-on: ${{ inputs.runs-on }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.working-directory }}
+    env:
+      # Maps package-manager → exec commands, used consistently below.
+      PM_RUN: ${{ inputs.package-manager == 'bun' && 'bun run' || inputs.package-manager == 'pnpm' && 'pnpm run' || 'npm run' }}
+      PM_INSTALL: ${{ inputs.package-manager == 'bun' && 'bun install --frozen-lockfile' || inputs.package-manager == 'pnpm' && 'pnpm install --frozen-lockfile' || 'npm ci' }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install bun (latest)
+        if: inputs.package-manager == 'bun'
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install pnpm
+        if: inputs.package-manager == 'pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Set up Node
+        if: inputs.package-manager != 'bun'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: ${{ inputs.package-manager }}
+
+      - name: Install dependencies
+        run: ${{ env.PM_INSTALL }}
+
+      - name: Lint
+        if: inputs.lint
+        run: |
+          if grep -q '"lint:check"' package.json; then
+            $PM_RUN lint:check
+          elif grep -q '"lint"' package.json; then
+            $PM_RUN lint
+          else
+            echo "No lint script — skipping"
+          fi
+
+      - name: Typecheck
+        if: inputs.typecheck
+        run: |
+          if grep -q '"typecheck"' package.json; then
+            $PM_RUN typecheck
+          elif [ -f tsconfig.json ]; then
+            npx tsc --noEmit
+          else
+            echo "No typecheck script or tsconfig — skipping"
+          fi
+
+      - name: Test
+        if: inputs.test
+        run: |
+          if grep -q '"test"' package.json; then
+            $PM_RUN test
+          else
+            echo "No test script — skipping"
+          fi
+
+      - name: Build
+        if: inputs.build
+        run: |
+          if grep -q '"build"' package.json; then
+            $PM_RUN build
+          else
+            echo "No build script — skipping"
+          fi
+
+      - name: Dependency audit (bun)
+        if: inputs.audit && inputs.package-manager == 'bun'
+        run: bun audit
+
+      - name: Dependency audit (pnpm)
+        if: inputs.audit && inputs.package-manager == 'pnpm'
+        run: pnpm audit --prod
+
+      - name: Dependency audit (npm)
+        if: inputs.audit && inputs.package-manager == 'npm'
+        run: npm audit --omit=dev --audit-level=high

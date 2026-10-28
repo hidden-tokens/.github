@@ -1,0 +1,96 @@
+---
+name: Security (reusable)
+
+# Reusable security pipeline for hidden-tokens repositories.
+#
+# Usage from a repository's own workflow:
+#
+#   name: Security
+#   on:
+#     push: { branches: [main] }
+#     pull_request:
+#   jobs:
+#     security:
+#       uses: hidden-tokens/.github/.github/workflows/reusable-security.yml@main
+#       with:
+#         codeql-languages: typescript,javascript
+#
+# Free-tier only: no GitHub Advanced Security required for secret scanning
+# (Trufflehog) or dependency review. CodeQL is free for public repositories.
+#
+# Calls on private repositories: CodeQL needs GHAS — leave codeql-languages
+# empty to skip it. Trufflehog and dependency review work everywhere.
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        description: Runner to execute on
+        type: string
+        default: ubuntu-latest
+      codeql-languages:
+        description: Comma-separated languages for CodeQL analysis — empty string skips CodeQL
+        type: string
+        default: ""
+      codeql-queries:
+        description: Additional CodeQL query set (security-extended, security-and-quality)
+        type: string
+        default: security-extended
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+
+jobs:
+  secret-scan:
+    name: Secret scan (Trufflehog)
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Scan for verified secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          # PRs: scan pull-request diff. Push: scan full history.
+          base: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
+          head: ${{ github.event_name == 'pull_request' && 'HEAD' || '' }}
+          extra_args: --only-verified --no-update
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@v4
+        with:
+          # Fails the PR on new known vulnerabilities — the org-level policy.
+          fail-on-severity: high
+          deny-licenses: AGPL-3.0, AGPL-3.0-or-later
+
+  codeql:
+    name: CodeQL
+    if: inputs.codeql-languages != ''
+    runs-on: ${{ inputs.runs-on }}
+    permissions:
+      security-events: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ inputs.codeql-languages }}
+          queries: ${{ inputs.codeql-queries }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@v3
