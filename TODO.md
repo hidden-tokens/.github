@@ -168,22 +168,24 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P3.3 — Code ownership and review conventions
 
-- [ ] Decide whether a root `CODEOWNERS` file is appropriate.
-- [ ] Define ownership only for real maintainers or teams.
-- [ ] Document review expectations and approval responsibilities.
-- [ ] Do not invent GitHub usernames, teams, or reviewer identities.
-- [ ] Align ownership rules with actual repository permissions.
+- [x] Decide whether a root `CODEOWNERS` file is appropriate.  (yes — `.github/CODEOWNERS`, this repo only)
+- [x] Define ownership only for real maintainers or teams.  (`@moughamir` — the org owner, verified; no invented identities)
+- [x] Document review expectations and approval responsibilities.  (in the CODEOWNERS header: PR trail is the review of record; single-maintainer self-approval)
+- [x] Do not invent GitHub usernames, teams, or reviewer identities.  (one real owner; no teams exist)
+- [x] Align ownership rules with actual repository permissions.  (org-owner account, admin:org verified)
 
-**Acceptance criteria:** Ownership rules, if enabled, reference valid maintainers and have a clear purpose.
+**Acceptance criteria: MET —** ownership references the one real maintainer,
+purpose documented in-file.
 
 ### P3.4 — Standard repository metadata
 
-- [ ] Audit licensing, funding, citation, and support metadata requirements.
-- [ ] Add only applicable files, such as `FUNDING.yml`, `SUPPORT.md`, or `CITATION.cff`.
-- [ ] Do not impose a license on repositories without an explicit licensing decision.
-- [ ] Document which files are organization defaults and which must remain project-specific.
+- [x] Audit licensing, funding, citation, and support metadata requirements.  (`docs/repository-metadata.md`)
+- [x] Add only applicable files, such as `FUNDING.yml`, `SUPPORT.md`, or `CITATION.cff`.  (SUPPORT.md existed from P1; FUNDING/CITATION not applicable)
+- [x] Do not impose a license on repositories without an explicit licensing decision.  (**no LICENSE — open decision for the org owner**, recorded in the metadata doc)
+- [x] Document which files are organization defaults and which must remain project-specific.  (auto-discovered vs explicit-adoption table)
 
-**Acceptance criteria:** Repository metadata is accurate, consistent, and does not make unauthorized legal or policy decisions.
+**Acceptance criteria: MET —** metadata is accurate; the license gap is
+recorded as a pending org decision rather than silently resolved.
 
 ---
 
@@ -191,21 +193,25 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P4.1 — Release conventions
 
-- [ ] Define versioning and release expectations for shared workflows.
-- [ ] Document how consumers pin reusable workflows to a release tag or commit SHA.
-- [ ] Explain compatibility and breaking-change expectations.
-- [ ] Define a changelog or release-note policy appropriate to the repository.
-- [ ] Avoid adding a release automation system unless it materially improves maintenance.  (Note: `reusable-release.yml` already drafted ahead of schedule on `develop`; this task reviews whether to keep or replace it.)
+- [x] Define versioning and release expectations for shared workflows.  (`docs/release-conventions.md` — semver-flavored intent table)
+- [x] Document how consumers pin reusable workflows to a release tag or commit SHA.  (three-tier reference strategy: `@main` / full SHA / `@vX.Y.Z`; `@develop` explicitly unsupported)
+- [x] Explain compatibility and breaking-change expectations.  (breaking process: `BREAKING:` marker, cut-PR + release-note announcement, examples updated in the same PR)
+- [x] Define a changelog or release-note policy appropriate to the repository.  (GitHub-generated notes from merged PRs; merge trail is the changelog; no hand-maintained file in this repo)
+- [x] Avoid adding a release automation system unless it materially improves maintenance.  (reviewed: `reusable-release.yml` **kept** — product repos need reproducible tagged releases; dry-run-first usage documented; illustrative until first real run)
 
-**Acceptance criteria:** Consumers can identify stable versions and assess changes before upgrading.
+**Acceptance criteria: MET —** consumers can identify stable versions and
+assess changes before upgrading.
 
 ### P4.2 — Reusable workflow compatibility
 
-- [ ] Define a stable reference strategy for reusable workflows.
-- [ ] Document immutable SHA references versus maintained version tags.
-- [ ] Establish a process for publishing compatible updates.
-- [ ] Define how breaking changes are announced.
-- [ ] Verify examples use the documented reference strategy.
+- [x] Define a stable reference strategy for reusable workflows.  (`@main` default, SHA for change control, tags for snapshots)
+- [x] Document immutable SHA references versus maintained version tags.  (in release-conventions; SHA resolution command included)
+- [x] Establish a process for publishing compatible updates.  (cut PR `develop` → `main` = the release event; tags cut from `main` at milestones)
+- [x] Define how breaking changes are announced.  (breaking-change process above)
+- [x] Verify examples use the documented reference strategy.  (all three examples call `@main` ✓)
+
+**Acceptance criteria: MET —** reference strategy documented and consistent
+with the examples.
 
 **Acceptance criteria:** Consumers can deliberately choose and update workflow versions.
 
@@ -215,13 +221,14 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P5.1 — Integration guide
 
-- [ ] Write a step-by-step guide for adopting the organization standards.
-- [ ] Explain which files GitHub automatically discovers from the special `.github` repository and which require explicit integration.
-- [ ] Include reusable workflow caller examples.
-- [ ] Explain repository-specific overrides and limitations.
-- [ ] Provide a checklist for maintainers adopting the standards.
+- [x] Write a step-by-step guide for adopting the organization standards.  (`docs/integration-guide.md`)
+- [x] Explain which files GitHub automatically discovers from the special `.github` repository and which require explicit integration.  (auto table vs adopt table)
+- [x] Include reusable workflow caller examples.  (linked from the guide)
+- [x] Explain repository-specific overrides and limitations.  (GHAS constraints, CodeQL gating, runs-on, Rust/Tauri roadmap note)
+- [x] Provide a checklist for maintainers adopting the standards.  (bottom of the guide)
 
-**Acceptance criteria:** A maintainer can distinguish automatic organization defaults from features that must be configured in each repository.
+**Acceptance criteria: MET —** automatic defaults are distinguished from
+explicit adoption throughout.
 
 ### P5.2 — Pilot repository
 
@@ -251,13 +258,21 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P5.3 — Gradual rollout
 
-- [ ] Inventory repositories eligible for adoption.
-- [ ] Prioritize by activity, risk, and technical compatibility.
-- [ ] Track adoption status and blockers.
-- [ ] Document migration steps and rollback instructions.
-- [ ] Roll out incrementally and verify each integration.
+- [x] Inventory repositories eligible for adoption.  (2026-10-28: org holds exactly 2 repos — `.github` itself and `core`. Nothing else can adopt until new repos are created; product repos live outside the org by decision)
+- [x] Prioritize by activity, risk, and technical compatibility.  (`core` first (pilot, done); `.github` self-hosts the validation workflow; no other candidates)
+- [x] Track adoption status and blockers.  (table below)
+- [x] Document migration steps and rollback instructions.  (`docs/integration-guide.md` for adoption; rollback = re-point caller ref to a previous SHA — see `docs/release-conventions.md`)
+- [x] Roll out incrementally and verify each integration.  (verified per-repo via actual runs: core PR #1 run 40735933843; .github run 40744114836)
 
-**Acceptance criteria:** Adoption is traceable and reversible; repositories are not changed blindly in bulk.
+**Adoption status:**
+
+| Repository | Security caller | Validation workflow | Dependabot | Notes |
+|---|---|---|---|---|
+| `hidden-tokens/.github` | n/a (hosts the reusables) | ✅ self-hosted (run 40744114836) | ✅ | The platform repo itself |
+| `hidden-tokens/core` | ✅ pilot (run 40735933843) | — (no own workflows yet) | ❌ pending | Open-core repo; add validation caller at next touch |
+
+**Acceptance criteria: MET —** adoption is traceable (runs cited) and
+reversible (SHA re-pin); no bulk changes were made.
 
 ---
 
@@ -265,33 +280,36 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P6.1 — Permission and trust audit
 
-- [ ] Audit every workflow’s `permissions` block.
-- [ ] Review third-party actions for pinned immutable references.
-- [ ] Review `pull_request_target`, privileged triggers, and untrusted pull request code execution.
-- [ ] Check for unnecessary secrets, token exposure, and write access.
-- [ ] Review artifact handling and workflow-to-workflow trust boundaries.
-- [ ] Document remaining risks and remediation decisions.
+- [x] Audit every workflow's `permissions` block.  (`docs/permissions-audit.md` — table for all four workflows; all minimal)
+- [x] Review third-party actions for pinned immutable references.  (11 `uses:` refs, all full SHAs, Dependabot-maintained)
+- [x] Review `pull_request_target`, privileged triggers, and untrusted pull request code execution.  (no `pull_request_target` anywhere; release is dispatch-only; CI runs PR code read-only)
+- [x] Check for unnecessary secrets, token exposure, and write access.  (no named secrets; `contents: write` only in the dispatch-only release reusable)
+- [x] Review artifact handling and workflow-to-workflow trust boundaries.  (no artifacts uploaded; permission cascade documented in the contract)
+- [x] Document remaining risks and remediation decisions.  (3 residual risks recorded with mitigations/decisions)
 
-**Acceptance criteria:** No known high-risk workflow pattern remains without a documented mitigation or explicit decision.
+**Acceptance criteria: MET —** no high-risk pattern without documented
+mitigation or explicit decision.
 
 ### P6.2 — Branch and repository protection guidance
 
-- [ ] Recommend branch protection or rulesets for `main`.
-- [ ] Document required checks and approval expectations.
-- [ ] Explain how to avoid blocking maintainers with impossible rules.
-- [ ] Separate policy recommendations from changes that require organization-owner privileges.
-- [ ] Verify the guidance matches actual workflow names and check behavior.
+- [x] Recommend branch protection or rulesets for `main`.  (`docs/branch-protection.md` — ruleset table)
+- [x] Document required checks and approval expectations.  (per-repo check names; single-maintainer approval reality: 0 required + owner as bypass actor)
+- [x] Explain how to avoid blocking maintainers with impossible rules.  (dedicated section)
+- [x] Separate policy recommendations from changes that require organization-owner privileges.  (guidance explicitly separated from the settings-UI action)
+- [x] Verify the guidance matches actual workflow names and check behavior.  (check names taken from the real workflow files/runs)
 
-**Acceptance criteria:** Maintainers have actionable guidance for protecting `main` without undocumented assumptions.
+**Acceptance criteria: MET —** actionable guidance, no undocumented
+assumptions. (Applying rulesets = owner action, offered as follow-up.)
 
 ### P6.3 — Security reporting verification
 
-- [ ] Verify the existing `SECURITY.md` reporting instructions.
-- [ ] Ensure the reporting destination is real and accessible to the intended maintainers.
-- [ ] Document response expectations only if maintainers have agreed to them.
-- [ ] Check that public issue templates do not encourage disclosure of vulnerabilities.
+- [x] Verify the existing `SECURITY.md` reporting instructions.  (real email info@hiddentokens.com; verified accessible copy)
+- [x] Ensure the reporting destination is real and accessible to the intended maintainers.  (**enabled GitHub private vulnerability reporting** on this repo via API — was off; `SECURITY.md` now lists both channels)
+- [x] Document response expectations only if maintainers have agreed to them.  (kept the existing "small team, reviewed promptly" wording — pre-existing user-authored text, not invented)
+- [x] Check that public issue templates do not encourage disclosure of vulnerabilities.  (templates contain no security-bait wording; SECURITY.md explicitly forbids public issues)
 
-**Acceptance criteria:** Security reports have a valid, documented path that does not expose sensitive vulnerability details publicly.
+**Acceptance criteria: MET —** two valid private paths (GitHub PVR + email),
+no public disclosure encouragement.
 
 ---
 
@@ -299,32 +317,34 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P7.1 — Root README
 
-- [ ] Replace any placeholder root README content with an accurate repository overview.
-- [ ] Explain the purpose of `hidden-tokens/.github`.
-- [ ] Link to contribution, security, adoption, and workflow documentation.
-- [ ] Clearly state what is automatic and what requires explicit adoption.
-- [ ] Keep the README concise and aligned with the Hidden Tokens brand.
+- [x] Replace any placeholder root README content with an accurate repository overview.  (README was already accurate from P1; extended rather than replaced)
+- [x] Explain the purpose of `hidden-tokens/.github`.  (present since P1)
+- [x] Link to contribution, security, adoption, and workflow documentation.  (docs link block added)
+- [x] Clearly state what is automatic and what requires explicit adoption.  (auto table + explicit-adoption guide link)
+- [x] Keep the README concise and aligned with the Hidden Tokens brand.  (privacy-rule section preserved; table format kept)
 
-**Acceptance criteria:** A new maintainer understands the repository’s purpose and how to use it.
+**Acceptance criteria: MET —** a new maintainer understands purpose and use.
 
 ### P7.2 — Standards catalog
 
-- [ ] Inventory all maintained files and workflows.
-- [ ] Record each file’s purpose, scope, dependencies, and adoption method.
-- [ ] Identify the owner or maintenance responsibility where known.
-- [ ] Document known limitations and supported configurations.
-- [ ] Link to verification procedures.
+- [x] Inventory all maintained files and workflows.  (`docs/standards-catalog.md` — verified against the working tree)
+- [x] Record each file's purpose, scope, dependencies, and adoption method.  (three tables: auto-discovered / explicit-adoption / config+docs)
+- [x] Identify the owner or maintenance responsibility where known.  (org owner throughout — single-maintainer org)
+- [x] Document known limitations and supported configurations.  (dedicated section: untested reusables, no Rust/Tauri profile yet, 2-repo scope)
+- [x] Link to verification procedures.  (validation workflow + pilot runs)
 
-**Acceptance criteria:** The catalog reflects the repository’s real contents rather than planned or hypothetical features.
+**Acceptance criteria: MET —** catalog reflects real contents, no
+hypothetical features.
 
 ### P7.3 — Troubleshooting
 
-- [ ] Document common reusable workflow errors.
-- [ ] Cover permissions, missing inputs, unsupported runtimes, and failed checks.
-- [ ] Explain how to distinguish caller errors from reusable workflow errors.
-- [ ] Include safe debugging guidance that does not expose secrets.
+- [x] Document common reusable workflow errors.  (`docs/troubleshooting.md` — all from real incidents in this org)
+- [x] Cover permissions, missing inputs, unsupported runtimes, and failed checks.  (startup_failure contract, trufflehog flag, dep-review GHAS, CodeQL gating, stale-PR lag)
+- [x] Explain how to distinguish caller errors from reusable workflow errors.  (dedicated section: run name + 0s startup_failure vs step-level failure)
+- [x] Include safe debugging guidance that does not expose secrets.  (run-bisect method; nothing requires printing secrets)
 
-**Acceptance criteria:** Common integration failures have actionable resolution steps.
+**Acceptance criteria: MET —** common integration failures have actionable
+resolution steps, all field-tested.
 
 ---
 

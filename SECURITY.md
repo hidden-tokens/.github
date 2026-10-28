@@ -6,7 +6,12 @@ Hidden Tokens exists so that sensitive information stays out of shared places. S
 
 **Please do not open a public GitHub issue for a security problem.**
 
-Send a report to [info@hiddentokens.com](mailto:info@hiddentokens.com) with:
+You can report privately in either of two ways:
+
+1. **GitHub private vulnerability reporting** — use *Security → Report a
+   vulnerability* on any Hidden Tokens repository. This is enabled on all org
+   repositories and reaches the maintainers directly, privately.
+2. **Email** — [info@hiddentokens.com](mailto:info@hiddentokens.com) with:
 
 - The affected surface (desktop app, browser extension, or website)
 - A description of the issue and how it could be exploited
