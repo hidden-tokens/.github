@@ -8,7 +8,10 @@
 
 Names, identifiers, and selected amounts are replaced locally with consistent codes before content is shared with an AI tool. When you need the original document back, the mappings are restored locally.
 
-[Website](https://hiddentokens.com/) · [Download](https://hiddentokens.com/#download) · [Academy](https://hiddentokens.com/academy/) · [Browser extension](https://hiddentokens.com/extension/)
+- [Website](https://hiddentokens.com/)
+- [Download](https://hiddentokens.com/#download)
+- [Academy](https://hiddentokens.com/academy/)
+- [Browser extension](https://hiddentokens.com/extension/)
 
 </div>
 
@@ -28,26 +31,7 @@ Hidden Tokens helps you prepare sensitive documents for AI workflows by replacin
 > Privacy is a workflow decision. Review the content and destination before sharing any document with an AI service.
 
 ## How it works
-
-```text
-Original document
-       │
-       ▼
-Local tokenization
-(real values → stable codes)
-       │
-       ▼
-Coded content ─────────► AI tool
-       │                    │
-       │                    ▼
-       │               AI response
-       │                    │
-       ▼                    ▼
-Local restoration ◄── coded response
-       │
-       ▼
-Result in original context
-```
+<img width="770" height="724" alt="image" src="https://github.com/user-attachments/assets/fcb952fc-916e-45e6-ac48-fa5af369241b" />
 
 The intended boundary is simple: replace the sensitive values before sending content to an AI service, then restore them locally. Always review the actual data being sent and the behavior of the AI service you use.
 
@@ -83,6 +67,5 @@ Questions, feedback, and practical use cases help shape the product.
 
 **AI does the work. It never knows who.**
 
-<sub>Published by Tardigrade SARL · Casablanca, Morocco</sub>
 
 </div>
