@@ -1,0 +1,31 @@
+name: release
+
+# ILLUSTRATIVE example — not yet run-verified. Always preview with
+# dry-run: true first; the real run tags and publishes a release.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Tag to release, e.g. v1.2.3
+        required: true
+        type: string
+      dry_run:
+        description: Preview only — no tag or release is published
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    uses: hidden-tokens/.github/.github/workflows/reusable-release.yml@main
+    with:
+      tag: ${{ inputs.version }}
+      dry-run: ${{ inputs.dry_run }}
+      changelog: true
+      generate-notes: true
+      prerelease: false
+      draft: false

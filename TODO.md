@@ -6,8 +6,12 @@
 
 > **Amendment (2026-10-28, maintainer decision):** Branching follows `feature → develop → main`
 > (develop is the integration branch; releases are cut via a `develop → main` PR), deviating from
-> the "PR against main" baseline below. P0/P1 landed on `develop`; the first `develop → main` cut
-> is pending release conventions (P4).
+> the "PR against main" baseline below. P0/P1 landed on `develop`.
+>
+> **Audit correction (2026-10-28):** The cut cadence is under way despite the P4 pending note —
+> four `develop → main` cuts already merged (PRs #4/#6/#8/#10; `main` at `a9d4a9a` = "Fourth cut:
+> pilot findings"). P4 remains responsible for the *formal* release conventions (tagging, SHA
+> pinning of callers), not for the existence of cuts.
 
 ## Agent execution contract
 
@@ -117,20 +121,23 @@ Branch: `feature/reusable-security` (actual: same branch as P2.2, merged to `dev
 - [x] Make language-specific checks configurable.  (codeql-languages input)
 - [x] Use least-privilege permissions and avoid unnecessary secrets.
 - [x] Pin third-party actions to full commit SHAs.
-- [x] Document required GitHub features, permissions, and billing constraints.  (header notes free-tier vs GHAS)
+- [x] Document required GitHub features, permissions, and billing constraints.  (dependency-review job note records the GHAS constraint; file header freed of the stale free-tier claim in the 2026-10-28 audit)
 - [x] Test successful and failing scenarios where practical.  (success path: core PR #1 run 40735933843 green; failure path: dependency review on private GHAS-less repo → auto-skipped, trufflehog arg repeat → fixed)
 
 **Acceptance criteria: MET —** documented AND run-verified via the core pilot (secret scan cross-repo green at `@main`; see P5.2 for the run evidence).
 
 ### P2.4 — Caller documentation and examples
 
-- [ ] Document the supported reusable workflows.
-- [ ] Add minimal caller examples under a documented examples directory.
-- [ ] Explain required permissions, inputs, secrets, and branch protections.
-- [ ] Explain how repositories opt in and how to debug failed calls.
-- [ ] Clearly distinguish tested examples from illustrative examples.
+- [x] Document the supported reusable workflows.  (`docs/reusable-workflows.md` — input tables for all three reusables, permissions contract, versioning/rollback)
+- [x] Add minimal caller examples under a documented examples directory.  (`examples/` — security/ci/release callers)
+- [x] Explain required permissions, inputs, secrets, and branch protections.  (permissions contract incl. the caller-grants-`pull-requests` rule; secrets: none needed for standard usage)
+- [x] Explain how repositories opt in and how to debug failed calls.  (opt-in = drop a caller into `.github/workflows/`; debugging: run-bisect method from P5.2 findings, actionlint in CI per P3.1)
+- [x] Clearly distinguish tested examples from illustrative examples.  (`examples/README.md` status table — security-caller TESTED via core PR #1 run 40735933843; ci/release illustrative)
 
-**Acceptance criteria:** A repository maintainer can integrate CI and security workflows by following the documentation alone.
+**Acceptance criteria: MET —** a maintainer can integrate the security workflow
+following `docs/reusable-workflows.md` + `examples/security-caller.yml` alone
+(the pilot proved exactly that path); CI/release remain illustrative until the
+first code-repo caller verifies them.
 
 ---
 
