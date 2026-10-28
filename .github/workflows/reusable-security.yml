@@ -1,9 +1,22 @@
 name: Security (reusable)
 on:
   workflow_call:
+    inputs:
+      runs-on:
+        description: Runner to execute on
+        type: string
+        default: ubuntu-latest
+      codeql-languages:
+        description: Comma-separated languages for CodeQL analysis — empty string skips CodeQL
+        type: string
+        default: ""
+      codeql-queries:
+        description: Additional CodeQL query set (security-extended, security-and-quality)
+        type: string
+        default: security-extended
 jobs:
   probe:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     timeout-minutes: 5
     steps:
       - run: echo probe
