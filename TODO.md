@@ -280,33 +280,36 @@ reversible (SHA re-pin); no bulk changes were made.
 
 ### P6.1 — Permission and trust audit
 
-- [ ] Audit every workflow’s `permissions` block.
-- [ ] Review third-party actions for pinned immutable references.
-- [ ] Review `pull_request_target`, privileged triggers, and untrusted pull request code execution.
-- [ ] Check for unnecessary secrets, token exposure, and write access.
-- [ ] Review artifact handling and workflow-to-workflow trust boundaries.
-- [ ] Document remaining risks and remediation decisions.
+- [x] Audit every workflow's `permissions` block.  (`docs/permissions-audit.md` — table for all four workflows; all minimal)
+- [x] Review third-party actions for pinned immutable references.  (11 `uses:` refs, all full SHAs, Dependabot-maintained)
+- [x] Review `pull_request_target`, privileged triggers, and untrusted pull request code execution.  (no `pull_request_target` anywhere; release is dispatch-only; CI runs PR code read-only)
+- [x] Check for unnecessary secrets, token exposure, and write access.  (no named secrets; `contents: write` only in the dispatch-only release reusable)
+- [x] Review artifact handling and workflow-to-workflow trust boundaries.  (no artifacts uploaded; permission cascade documented in the contract)
+- [x] Document remaining risks and remediation decisions.  (3 residual risks recorded with mitigations/decisions)
 
-**Acceptance criteria:** No known high-risk workflow pattern remains without a documented mitigation or explicit decision.
+**Acceptance criteria: MET —** no high-risk pattern without documented
+mitigation or explicit decision.
 
 ### P6.2 — Branch and repository protection guidance
 
-- [ ] Recommend branch protection or rulesets for `main`.
-- [ ] Document required checks and approval expectations.
-- [ ] Explain how to avoid blocking maintainers with impossible rules.
-- [ ] Separate policy recommendations from changes that require organization-owner privileges.
-- [ ] Verify the guidance matches actual workflow names and check behavior.
+- [x] Recommend branch protection or rulesets for `main`.  (`docs/branch-protection.md` — ruleset table)
+- [x] Document required checks and approval expectations.  (per-repo check names; single-maintainer approval reality: 0 required + owner as bypass actor)
+- [x] Explain how to avoid blocking maintainers with impossible rules.  (dedicated section)
+- [x] Separate policy recommendations from changes that require organization-owner privileges.  (guidance explicitly separated from the settings-UI action)
+- [x] Verify the guidance matches actual workflow names and check behavior.  (check names taken from the real workflow files/runs)
 
-**Acceptance criteria:** Maintainers have actionable guidance for protecting `main` without undocumented assumptions.
+**Acceptance criteria: MET —** actionable guidance, no undocumented
+assumptions. (Applying rulesets = owner action, offered as follow-up.)
 
 ### P6.3 — Security reporting verification
 
-- [ ] Verify the existing `SECURITY.md` reporting instructions.
-- [ ] Ensure the reporting destination is real and accessible to the intended maintainers.
-- [ ] Document response expectations only if maintainers have agreed to them.
-- [ ] Check that public issue templates do not encourage disclosure of vulnerabilities.
+- [x] Verify the existing `SECURITY.md` reporting instructions.  (real email info@hiddentokens.com; verified accessible copy)
+- [x] Ensure the reporting destination is real and accessible to the intended maintainers.  (**enabled GitHub private vulnerability reporting** on this repo via API — was off; `SECURITY.md` now lists both channels)
+- [x] Document response expectations only if maintainers have agreed to them.  (kept the existing "small team, reviewed promptly" wording — pre-existing user-authored text, not invented)
+- [x] Check that public issue templates do not encourage disclosure of vulnerabilities.  (templates contain no security-bait wording; SECURITY.md explicitly forbids public issues)
 
-**Acceptance criteria:** Security reports have a valid, documented path that does not expose sensitive vulnerability details publicly.
+**Acceptance criteria: MET —** two valid private paths (GitHub PVR + email),
+no public disclosure encouragement.
 
 ---
 
@@ -314,32 +317,34 @@ reversible (SHA re-pin); no bulk changes were made.
 
 ### P7.1 — Root README
 
-- [ ] Replace any placeholder root README content with an accurate repository overview.
-- [ ] Explain the purpose of `hidden-tokens/.github`.
-- [ ] Link to contribution, security, adoption, and workflow documentation.
-- [ ] Clearly state what is automatic and what requires explicit adoption.
-- [ ] Keep the README concise and aligned with the Hidden Tokens brand.
+- [x] Replace any placeholder root README content with an accurate repository overview.  (README was already accurate from P1; extended rather than replaced)
+- [x] Explain the purpose of `hidden-tokens/.github`.  (present since P1)
+- [x] Link to contribution, security, adoption, and workflow documentation.  (docs link block added)
+- [x] Clearly state what is automatic and what requires explicit adoption.  (auto table + explicit-adoption guide link)
+- [x] Keep the README concise and aligned with the Hidden Tokens brand.  (privacy-rule section preserved; table format kept)
 
-**Acceptance criteria:** A new maintainer understands the repository’s purpose and how to use it.
+**Acceptance criteria: MET —** a new maintainer understands purpose and use.
 
 ### P7.2 — Standards catalog
 
-- [ ] Inventory all maintained files and workflows.
-- [ ] Record each file’s purpose, scope, dependencies, and adoption method.
-- [ ] Identify the owner or maintenance responsibility where known.
-- [ ] Document known limitations and supported configurations.
-- [ ] Link to verification procedures.
+- [x] Inventory all maintained files and workflows.  (`docs/standards-catalog.md` — verified against the working tree)
+- [x] Record each file's purpose, scope, dependencies, and adoption method.  (three tables: auto-discovered / explicit-adoption / config+docs)
+- [x] Identify the owner or maintenance responsibility where known.  (org owner throughout — single-maintainer org)
+- [x] Document known limitations and supported configurations.  (dedicated section: untested reusables, no Rust/Tauri profile yet, 2-repo scope)
+- [x] Link to verification procedures.  (validation workflow + pilot runs)
 
-**Acceptance criteria:** The catalog reflects the repository’s real contents rather than planned or hypothetical features.
+**Acceptance criteria: MET —** catalog reflects real contents, no
+hypothetical features.
 
 ### P7.3 — Troubleshooting
 
-- [ ] Document common reusable workflow errors.
-- [ ] Cover permissions, missing inputs, unsupported runtimes, and failed checks.
-- [ ] Explain how to distinguish caller errors from reusable workflow errors.
-- [ ] Include safe debugging guidance that does not expose secrets.
+- [x] Document common reusable workflow errors.  (`docs/troubleshooting.md` — all from real incidents in this org)
+- [x] Cover permissions, missing inputs, unsupported runtimes, and failed checks.  (startup_failure contract, trufflehog flag, dep-review GHAS, CodeQL gating, stale-PR lag)
+- [x] Explain how to distinguish caller errors from reusable workflow errors.  (dedicated section: run name + 0s startup_failure vs step-level failure)
+- [x] Include safe debugging guidance that does not expose secrets.  (run-bisect method; nothing requires printing secrets)
 
-**Acceptance criteria:** Common integration failures have actionable resolution steps.
+**Acceptance criteria: MET —** common integration failures have actionable
+resolution steps, all field-tested.
 
 ---
 
