@@ -1,0 +1,24 @@
+name: Test — internal reusable call
+
+# A/B test for P5.2 pilot startup_failure diagnostics: this calls the SAME
+# reusable workflows from within their own (public) repo.
+# Nothing here will be kept long-term; delete after diagnosis.
+
+on:
+  push:
+    branches: [test/reusable-internal, develop, main]
+  workflow_dispatch:
+
+jobs:
+  ci:
+    uses: ./.github/workflows/reusable-ci.yml
+    with:
+      lint: false
+      typecheck: false
+      test: false
+      build: false
+      audit: false
+      package-manager: npm
+
+  security:
+    uses: ./.github/workflows/reusable-security.yml
