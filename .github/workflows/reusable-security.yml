@@ -47,6 +47,10 @@ on:
         description: Additional CodeQL query set (security-extended, security-and-quality)
         type: string
         default: security-extended
+      dependency-review:
+        description: '"auto" (public repos only) | "on" (requires GHAS on private) | "off"'
+        type: string
+        default: auto
 
 permissions:
   contents: read
@@ -74,7 +78,12 @@ jobs:
 
   dependency-review:
     name: Dependency review
-    if: github.event_name == 'pull_request'
+    # GHAS constraint learned at the pilot: the dependency review action errors
+    # out on private repositories without GitHub Advanced Security, so "auto"
+    # runs it only on public repos; private+GHAS callers can force it with "on".
+    if: >-
+      github.event_name == 'pull_request' && inputs.dependency-review != 'off' &&
+      (inputs.dependency-review == 'on' || github.event.repository.private == false)
     runs-on: ${{ inputs.runs-on }}
     timeout-minutes: 10
     steps:
