@@ -1,0 +1,21 @@
+version: 2
+
+# The org's own actions are SHA-pinned (org policy), which means they never
+# move on their own — Dependabot is what keeps the pins current. Weekly
+# cadence, one grouped PR per ecosystem so the diff stays reviewable.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns:
+          - "*"
+    # Fail-on-vulnerability policy is enforced by the reusable security
+    # workflow; Dependabot only proposes the version bumps.
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope

@@ -157,13 +157,14 @@ before merge; the workflow validated itself on its introducing PR
 
 ### P3.2 — Dependency maintenance
 
-- [ ] Evaluate Dependabot configuration for the repository’s actual dependencies.
-- [ ] Configure GitHub Actions dependency updates where relevant.
-- [ ] Set sensible update schedules and grouping to avoid excessive PR noise.
-- [ ] Document how dependency update PRs are reviewed.
-- [ ] Avoid enabling ecosystems that the repository does not use.
+- [x] Evaluate Dependabot configuration for the repository's actual dependencies.  (only ecosystem in use = GitHub Actions; the repo has no npm/pip/etc. code)
+- [x] Configure GitHub Actions dependency updates where relevant.  (`.github/dependabot.yml` — github-actions ecosystem, weekly; keeps the org-policy SHA pins current)
+- [x] Set sensible update schedules and grouping to avoid excessive PR noise.  (weekly + one grouped PR per ecosystem, max 5 open)
+- [x] Document how dependency update PRs are reviewed.  (bumps land via the standard feature-branch → develop PR path; the validation workflow lints the touched workflows automatically)
+- [x] Avoid enabling ecosystems that the repository does not use.  (single ecosystem configured)
 
-**Acceptance criteria:** Relevant dependencies have a maintainable update strategy without unnecessary automation.
+**Acceptance criteria: MET —** the one relevant ecosystem (Actions pins) has a
+maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P3.3 — Code ownership and review conventions
 
