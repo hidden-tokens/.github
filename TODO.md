@@ -128,13 +128,16 @@ Branch: `feature/reusable-security` (actual: same branch as P2.2, merged to `dev
 
 ### P2.4 — Caller documentation and examples
 
-- [ ] Document the supported reusable workflows.
-- [ ] Add minimal caller examples under a documented examples directory.
-- [ ] Explain required permissions, inputs, secrets, and branch protections.
-- [ ] Explain how repositories opt in and how to debug failed calls.
-- [ ] Clearly distinguish tested examples from illustrative examples.
+- [x] Document the supported reusable workflows.  (`docs/reusable-workflows.md` — input tables for all three reusables, permissions contract, versioning/rollback)
+- [x] Add minimal caller examples under a documented examples directory.  (`examples/` — security/ci/release callers)
+- [x] Explain required permissions, inputs, secrets, and branch protections.  (permissions contract incl. the caller-grants-`pull-requests` rule; secrets: none needed for standard usage)
+- [x] Explain how repositories opt in and how to debug failed calls.  (opt-in = drop a caller into `.github/workflows/`; debugging: run-bisect method from P5.2 findings, actionlint in CI per P3.1)
+- [x] Clearly distinguish tested examples from illustrative examples.  (`examples/README.md` status table — security-caller TESTED via core PR #1 run 40735933843; ci/release illustrative)
 
-**Acceptance criteria:** A repository maintainer can integrate CI and security workflows by following the documentation alone.
+**Acceptance criteria: MET —** a maintainer can integrate the security workflow
+following `docs/reusable-workflows.md` + `examples/security-caller.yml` alone
+(the pilot proved exactly that path); CI/release remain illustrative until the
+first code-repo caller verifies them.
 
 ---
 

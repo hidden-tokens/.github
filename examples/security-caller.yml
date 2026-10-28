@@ -1,0 +1,21 @@
+name: security
+
+# Pilot caller for the org's reusable security workflow.
+# Secret scan runs on push (full history); dependency review runs on PRs.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+# The reusable workflow declares contents:read + security-events:write only:
+# GitHub rejects a workflow_call-only reusable that declares `pull-requests`
+# itself (startup_failure) — the caller must grant it.
+permissions:
+  contents: read
+  pull-requests: read
+  security-events: write
+
+jobs:
+  security:
+    uses: hidden-tokens/.github/.github/workflows/reusable-security.yml@main

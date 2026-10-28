@@ -1,0 +1,26 @@
+name: CI
+
+# ILLUSTRATIVE example — not yet run-verified (awaits the first TS/bun repo).
+# Adjust the inputs to the repo's reality; every stage toggles independently
+# and defaults are shown explicitly here for discoverability.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: hidden-tokens/.github/.github/workflows/reusable-ci.yml@main
+    with:
+      package-manager: bun   # bun | pnpm | npm
+      working-directory: "."
+      node-version: "22"
+      lint: true
+      typecheck: true
+      test: true
+      build: true
+      audit: false
