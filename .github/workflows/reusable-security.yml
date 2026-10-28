@@ -15,8 +15,6 @@ name: Security (reusable)
 #       with:
 #         codeql-languages: typescript,javascript
 #
-# Free-tier only: no GitHub Advanced Security required for secret scanning
-# (Trufflehog) or dependency review. CodeQL is free for public repositories.
 #
 # Calls on private repositories: CodeQL needs GHAS — leave codeql-languages
 # empty to skip it. Trufflehog and dependency review work everywhere.
@@ -39,7 +37,6 @@ on:
 
 permissions:
   contents: read
-  security-events: write
   pull-requests: read
 
 jobs:
@@ -74,18 +71,6 @@ jobs:
           # Fails the PR on new known vulnerabilities — the org-level policy.
           fail-on-severity: high
           deny-licenses: AGPL-3.0, AGPL-3.0-or-later
-
-  codeql:
-    name: CodeQL
-    if: inputs.codeql-languages != ''
-    runs-on: ${{ inputs.runs-on }}
-    timeout-minutes: 30
-    permissions:
-      security-events: write
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # pins v5
-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # pins v3
         with:
