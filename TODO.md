@@ -374,8 +374,11 @@ resolution steps, all field-tested.
    breaking callers.
 3. **CI/release reusables real-run verification** — illustrative until a
    code repo adopts them (P5.3 table tracks it).
-4. **Branch rulesets application** — guidance documented (P6.2); applying
-   them in settings is an owner action, offered as follow-up.
+4. **Branch rulesets** — guidance documented (P6.2); **applied 2026-10-28**:
+   `protect-main` ruleset active on both `.github` and `core` (`main`: PRs
+   required, no force-push, no deletion; 0 required approvals per the
+   single-maintainer reality; code-owner review wired on `.github`).
+   Direct-push rejection verified empirically on `core`.
 5. **Dependabot on `hidden-tokens/core`** — pending next touch of the pilot
    repo (P5.3 table).
 

@@ -57,6 +57,8 @@ fine: `main` is the protected surface.
 
 ## Where policy ends and privilege begins
 
-Everything above is documented policy; actually creating rulesets changes
-repository behavior and needs the owner. The org owner (moughamir) applies
-them per repository — the pilot repo `core` is the first candidate.
+Everything above is documented policy. The `protect-main` ruleset is now
+**applied** (2026-10-28) on this repo and on `core` via the rulesets API —
+enforcement `active`, targeting `refs/heads/main`, verified by an actual
+rejected direct push. New org repositories get the same ruleset at adoption
+time (see [`docs/integration-guide.md`](integration-guide.md)).
