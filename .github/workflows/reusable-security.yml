@@ -15,6 +15,8 @@ name: Security (reusable)
 #       with:
 #         codeql-languages: typescript,javascript
 #
+# Free-tier only: no GitHub Advanced Security required for secret scanning
+# (Trufflehog) or dependency review. CodeQL is free for public repositories.
 #
 # Calls on private repositories: CodeQL needs GHAS — leave codeql-languages
 # empty to skip it. Trufflehog and dependency review work everywhere.
@@ -37,6 +39,7 @@ on:
 
 permissions:
   contents: read
+  security-events: write
   pull-requests: read
 
 jobs:
@@ -46,10 +49,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Check out repository
-        run: echo checkout-stub
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # pins v5
+        with:
+          fetch-depth: 0
 
       - name: Scan for verified secrets
-        run: echo trufflehog-stub
+        uses: trufflesecurity/trufflehog@0301dc36bd6762d2a20a8317ae00375eb5ba90a9  # pins main
         with:
           path: ./
           # PRs: scan pull-request diff. Push: scan full history.
@@ -64,11 +69,23 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Review dependency changes
-        run: echo dep-review-stub
+        uses: actions/dependency-review-action@907a6e9569212033966bc0b69d32473b046dd66b  # pins v4
         with:
           # Fails the PR on new known vulnerabilities — the org-level policy.
           fail-on-severity: high
           deny-licenses: AGPL-3.0, AGPL-3.0-or-later
+
+  codeql:
+    name: CodeQL
+    if: inputs.codeql-languages != ''
+    runs-on: ${{ inputs.runs-on }}
+    timeout-minutes: 30
+    permissions:
+      security-events: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # pins v5
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@354d3a23c0a0a30518fc36e7ed533bc072f874f6  # pins v3
         with:

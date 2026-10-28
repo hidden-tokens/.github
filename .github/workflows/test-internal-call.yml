@@ -6,11 +6,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  sanity:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - run: echo hello
-
   security:
     uses: ./.github/workflows/reusable-security.yml
