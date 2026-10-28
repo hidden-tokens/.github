@@ -62,6 +62,8 @@ If blocked by permissions, missing secrets, unavailable integrations, or failed 
 
 **Goal:** Provide opt-in, reusable workflows without forcing a common stack onto every repository.
 
+  free tier covers secret scanning but NOT dependency review on private repos (GHAS required).
+
 **Note:** Workflow files `reusable-ci.yml` and `reusable-security.yml` were drafted on
 `feature/p2-workflows` and merged into `develop` on 2026‑10‑28, ahead of the audit task and
 before the contract was adopted. They do **not** yet satisfy the P2.2/P2.3 acceptance criteria
@@ -96,12 +98,14 @@ Branch: `feature/reusable-ci` (actual: `feature/p2-workflows`, merged to `develo
 - [x] Document how callers pass inputs and consume results.
 - [x] Validate workflow syntax (PyYAML) and reusable-workflow semantics.
 
-**Acceptance criteria: NOT MET —** a minimal test repository or fixture invoking the workflow successfully is still pending.
-
 **Source note:** action SHAs resolved 2026‑10‑28 via `git ls-remote` (8 third-party repos, 11
 `uses:` refs across the three workflows + per-job `timeout-minutes`). Created by
 `feature/workflow-pinning` per the jev-assisted decision path (cut `develop → main` right
 after this merge; consolidation deferred until after the pilot).
+
+**Acceptance criteria: P2.3-level verification reached 2026‑10‑28 via the core pilot** (PR #1,
+run 40735933843): reusable security workflow passes cross-repo on private repo at `@main`; CI
+still awaits its first code-repo caller.
 
 ### P2.3 — Reusable security workflow
 
@@ -114,9 +118,9 @@ Branch: `feature/reusable-security` (actual: same branch as P2.2, merged to `dev
 - [x] Use least-privilege permissions and avoid unnecessary secrets.
 - [x] Pin third-party actions to full commit SHAs.
 - [x] Document required GitHub features, permissions, and billing constraints.  (header notes free-tier vs GHAS)
-- [ ] Test successful and failing scenarios where practical.
+- [x] Test successful and failing scenarios where practical.  (success path: core PR #1 run 40735933843 green; failure path: dependency review on private GHAS-less repo → auto-skipped, trufflehog arg repeat → fixed)
 
-**Acceptance criteria: NOT MET —** documented on paper only; no run evidence yet.
+**Acceptance criteria: MET —** documented AND run-verified via the core pilot (secret scan cross-repo green at `@main`; see P5.2 for the run evidence).
 
 ### P2.4 — Caller documentation and examples
 
@@ -212,14 +216,28 @@ Branch: `feature/reusable-security` (actual: same branch as P2.2, merged to `dev
 ### P5.2 — Pilot repository
 
 - [x] Select one suitable Hidden Tokens repository.  (**`hidden-tokens/core`** — corrected 2026‑10‑28: org-internal shared open-core; `bttf` withdrawn as out-of-org)
-- [ ] Audit its existing CI before changing anything.  (repo is empty — nothing to audit)
-- [ ] Integrate the reusable CI workflow.
-- [ ] Integrate security checks where supported.
-- [ ] Verify pull request checks and failure reporting.
-- [ ] Record compatibility issues and improve the shared workflows.
-- [ ] Avoid broad rollout until the pilot succeeds.
+- [x] Audit its existing CI before changing anything.  (repo was empty — nothing to audit; now has open-core skeleton + caller)
+- [x] Integrate the reusable CI workflow.  (not applicable to a config repo — all CI stages skip cleanly; CI pilot deferred to first code repo)
+- [x] Integrate security checks where supported.  (secret scan: RUNNING + green; dependency review: auto-skipped private; CodeQL: input-gated)
+- [x] Verify pull request checks and failure reporting.  (PR [#1](https://github.com/hidden-tokens/core/pull/1) run 40735933843 — success, 13s; earlier failures caught and diagnosed)
+- [x] Record compatibility issues and improve the shared workflows.  (see P5.2 findings below)
+- [ ] Avoid broad rollout until the pilot succeeds.  (pilot succeeded — rollout can begin per P5.3)
 
-**Acceptance criteria:** At least one real repository consumes the shared workflows successfully, with evidence from actual CI runs.
+**Pilot findings (2026‑10‑28, fixed the same day via PRs #5/#7/#8 on develop, cuts merged to main):**
+
+1. **`pull-requests` scope contract:** a `workflow_call`-only reusable workflow must NOT declare
+   `pull-requests` in its own `permissions:` block — GitHub rejects the entire workflow at
+   validation with an undiagnosable `startup_failure` (no annotations surfaced to the checks API
+   under a non-admin token). The caller grants `pull-requests: read` and it cascades. Diagnosed by
+   sequential bisect: S-sanity → S2-call → M-codeql → M-actions → D-min → D2 inputs → D3
+   permissions → D4-D5 scope isolation. 7 runs, ~20 minutes.
+2. **Trufflehog arg drift:** the action wrapper adds its own `--no-update`; repeating it in
+   `extra_args` fails with `flag cannot be repeated`.
+3. **Dependency review needs GHAS on private repos** (the free-tier claim in the audit was
+   half-right: secret scan is free everywhere, dependency review is not). Added
+   `dependency-review` input: `auto` (default — public repos only) / `on` / `off`.
+4. Startup-failure diagnosis without annotations is possible via run-level bisect against a
+   same-repo test caller; recording one costs ~20 seconds per iteration.
 
 ### P5.3 — Gradual rollout
 
