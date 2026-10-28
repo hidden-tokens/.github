@@ -1,0 +1,37 @@
+name: Workflow validation
+
+# P3.1: catch invalid workflow files before merge — the startup_failure class
+# of error (e.g. the pull-requests-scope contract) is invisible to the checks
+# API once GitHub rejects the workflow, so it must be caught pre-push.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # main HEAD, 2026-10-28
+
+      # Validates .github/workflows/*.yml plus the example callers under
+      # examples/ (explicit paths — actionlint only auto-scans .github/workflows).
+      # actionlint ships no first-party GitHub Action; the release tarball is
+      # downloaded and checksum-pinned instead of trusting a third-party wrapper.
+      - name: Install actionlint (checksum-verified)
+        run: |
+          curl -sSfLo actionlint.tar.gz \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz
+          echo "023070a287cd8cccd71515fedc843f1985bf96c436b7effaecce67290e7e0757  actionlint.tar.gz" | sha256sum -c -
+          tar -xzf actionlint.tar.gz actionlint
+
+      - name: Lint workflow files
+        run: ./actionlint -version && ./actionlint .github/workflows/*.yml examples/*.yml
