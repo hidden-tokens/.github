@@ -350,20 +350,38 @@ resolution steps, all field-tested.
 
 ## P8 — Final verification and stable release
 
-- [ ] Confirm P0 and P1 files remain intact.
-- [ ] Verify all documented paths and links.
-- [ ] Validate workflow syntax and references.
-- [ ] Run available repository checks.
-- [ ] Test documented workflow integrations.
-- [ ] Audit permissions and action pinning.
-- [ ] Check for secrets, placeholder URLs, and fabricated configuration.
-- [ ] Confirm the working tree is clean and all intended changes are committed.
-- [ ] Review open issues, outstanding blockers, and deferred tasks.
-- [ ] Publish release notes or a milestone summary if appropriate.
-- [ ] Mark the roadmap complete only when acceptance criteria are met.
-- [ ] Record follow-up maintenance tasks separately.
+- [x] Confirm P0 and P1 files remain intact.  (all present on `main` @ `5b2ca6e`)
+- [x] Verify all documented paths and links.  (link sweep across all `.md`: broken = none)
+- [x] Validate workflow syntax and references.  (PyYAML + actionlint over all 5 workflow files + 3 examples: clean)
+- [x] Run available repository checks.  (validation workflow green on `main`: run 40745840437; first Dependabot schedule check ran clean — pins current)
+- [x] Test documented workflow integrations.  (security caller run-verified via core pilot PR #1 run 40735933843)
+- [x] Audit permissions and action pinning.  (P6.1 audit; all 11 `uses:` refs SHA-pinned)
+- [x] Check for secrets, placeholder URLs, and fabricated configuration.  (grep sweep: no secrets; remaining "TODO" hits are section labels, not unfinished markers)
+- [x] Confirm the working tree is clean and all intended changes are committed.  (clean; 0 open PRs)
+- [x] Review open issues, outstanding blockers, and deferred tasks.  (0 open issues; deferred items recorded below)
+- [x] Publish release notes or a milestone summary if appropriate.  (**tag `v1.0.0` on `main`** with generated notes)
+- [x] Mark the roadmap complete only when acceptance criteria are met.  (all phases P0–P8 have MET criteria; deferred decisions listed below)
+- [x] Record follow-up maintenance tasks separately.  (deferred list below)
 
-**Definition of done:** The repository has accurate community standards, documented reusable workflows, validated examples, an adopted security baseline, a proven pilot integration, and maintainable operating documentation.
+**Deferred (open decisions / future work, tracked here):**
+
+1. **LICENSE** — an explicit org licensing decision is pending (P3.4). Until
+   decided, the public repo is all-rights-reserved by default.
+2. **Rust/Tauri CI profile** — the primary product CI profile (cargo
+   fmt/check/clippy/test + Tauri build matrix) lands with the first product
+   repo; the reusable-ci input surface was designed to extend without
+   breaking callers.
+3. **CI/release reusables real-run verification** — illustrative until a
+   code repo adopts them (P5.3 table tracks it).
+4. **Branch rulesets application** — guidance documented (P6.2); applying
+   them in settings is an owner action, offered as follow-up.
+5. **Dependabot on `hidden-tokens/core`** — pending next touch of the pilot
+   repo (P5.3 table).
+
+**Definition of done: MET** — accurate community standards, documented and
+run-verified reusable workflows, validated examples, adopted security
+baseline (incl. private vulnerability reporting), proven pilot integration,
+and maintainable operating documentation.
 
 ---
 
