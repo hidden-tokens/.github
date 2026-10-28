@@ -168,22 +168,24 @@ maintainable, grouped, weekly update strategy; nothing else is enabled.
 
 ### P3.3 — Code ownership and review conventions
 
-- [ ] Decide whether a root `CODEOWNERS` file is appropriate.
-- [ ] Define ownership only for real maintainers or teams.
-- [ ] Document review expectations and approval responsibilities.
-- [ ] Do not invent GitHub usernames, teams, or reviewer identities.
-- [ ] Align ownership rules with actual repository permissions.
+- [x] Decide whether a root `CODEOWNERS` file is appropriate.  (yes — `.github/CODEOWNERS`, this repo only)
+- [x] Define ownership only for real maintainers or teams.  (`@moughamir` — the org owner, verified; no invented identities)
+- [x] Document review expectations and approval responsibilities.  (in the CODEOWNERS header: PR trail is the review of record; single-maintainer self-approval)
+- [x] Do not invent GitHub usernames, teams, or reviewer identities.  (one real owner; no teams exist)
+- [x] Align ownership rules with actual repository permissions.  (org-owner account, admin:org verified)
 
-**Acceptance criteria:** Ownership rules, if enabled, reference valid maintainers and have a clear purpose.
+**Acceptance criteria: MET —** ownership references the one real maintainer,
+purpose documented in-file.
 
 ### P3.4 — Standard repository metadata
 
-- [ ] Audit licensing, funding, citation, and support metadata requirements.
-- [ ] Add only applicable files, such as `FUNDING.yml`, `SUPPORT.md`, or `CITATION.cff`.
-- [ ] Do not impose a license on repositories without an explicit licensing decision.
-- [ ] Document which files are organization defaults and which must remain project-specific.
+- [x] Audit licensing, funding, citation, and support metadata requirements.  (`docs/repository-metadata.md`)
+- [x] Add only applicable files, such as `FUNDING.yml`, `SUPPORT.md`, or `CITATION.cff`.  (SUPPORT.md existed from P1; FUNDING/CITATION not applicable)
+- [x] Do not impose a license on repositories without an explicit licensing decision.  (**no LICENSE — open decision for the org owner**, recorded in the metadata doc)
+- [x] Document which files are organization defaults and which must remain project-specific.  (auto-discovered vs explicit-adoption table)
 
-**Acceptance criteria:** Repository metadata is accurate, consistent, and does not make unauthorized legal or policy decisions.
+**Acceptance criteria: MET —** metadata is accurate; the license gap is
+recorded as a pending org decision rather than silently resolved.
 
 ---
 
