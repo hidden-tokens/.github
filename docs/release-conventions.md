@@ -8,6 +8,10 @@ versions, references, and breaking changes.
 - All work lands on feature branches → PR → `develop`.
 - A **cut** is a reviewed PR `develop` → `main`; every merge to `main` is a
   release candidate. History shows the cut cadence in the merge trail.
+- **After every cut, fast-forward `develop` to `main`** (`git push origin
+  origin/main:develop`). Cut merge commits land only on `main`, so without
+  this step `develop` accumulates a "behind main" count of one merge commit
+  per cut. Fast-forwarding keeps both branches identical between cuts.
 - Tags (`vX.Y.Z`) are cut from `main` when a stable milestone is reached —
   not per merge. Tags are immutable once published.
 - Release notes are GitHub-generated from merged PRs (no hand-maintained
