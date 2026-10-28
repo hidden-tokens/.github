@@ -8,6 +8,7 @@ on:
         default: ubuntu-latest
 permissions:
   contents: read
+  security-events: write
 jobs:
   probe:
     runs-on: ${{ inputs.runs-on }}
