@@ -145,13 +145,15 @@ first code-repo caller verifies them.
 
 ### P3.1 — Workflow validation
 
-- [ ] Add automated validation for workflow YAML and related configuration.
-- [ ] Select a suitable action/workflow linter based on the repository’s actual needs.
-- [ ] Validate reusable workflow interfaces and example callers.
-- [ ] Add checks for accidental secret exposure and common configuration mistakes where practical.
-- [ ] Keep validation fast enough for routine pull requests.
+- [x] Add automated validation for workflow YAML and related configuration.  (`validation-actionlint.yml` on push/PR/workflow_dispatch)
+- [x] Select a suitable action/workflow linter based on the repository's actual needs.  (actionlint v1.7.7 — catches schema/permission/eval errors PyYAML misses; chosen over a third-party wrapper action, binary is checksum-pinned)
+- [x] Validate reusable workflow interfaces and example callers.  (job lints `.github/workflows/*.yml` **and** `examples/*.yml`)
+- [x] Add checks for accidental secret exposure and common configuration mistakes where practical.  (common mistakes: schema + permissions-model checks; secret exposure is Trufflehog's job per PR/push, not the linter's)
+- [x] Keep validation fast enough for routine pull requests.  (9s on the first run)
 
-**Acceptance criteria:** Invalid workflow configuration is detected before merge.
+**Acceptance criteria: MET —** invalid workflow configuration is detected
+before merge; the workflow validated itself on its introducing PR
+([run 40744114836](https://github.com/hidden-tokens/.github/actions/runs/40744114836), success).
 
 ### P3.2 — Dependency maintenance
 
