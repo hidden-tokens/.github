@@ -193,21 +193,25 @@ recorded as a pending org decision rather than silently resolved.
 
 ### P4.1 — Release conventions
 
-- [ ] Define versioning and release expectations for shared workflows.
-- [ ] Document how consumers pin reusable workflows to a release tag or commit SHA.
-- [ ] Explain compatibility and breaking-change expectations.
-- [ ] Define a changelog or release-note policy appropriate to the repository.
-- [ ] Avoid adding a release automation system unless it materially improves maintenance.  (Note: `reusable-release.yml` already drafted ahead of schedule on `develop`; this task reviews whether to keep or replace it.)
+- [x] Define versioning and release expectations for shared workflows.  (`docs/release-conventions.md` — semver-flavored intent table)
+- [x] Document how consumers pin reusable workflows to a release tag or commit SHA.  (three-tier reference strategy: `@main` / full SHA / `@vX.Y.Z`; `@develop` explicitly unsupported)
+- [x] Explain compatibility and breaking-change expectations.  (breaking process: `BREAKING:` marker, cut-PR + release-note announcement, examples updated in the same PR)
+- [x] Define a changelog or release-note policy appropriate to the repository.  (GitHub-generated notes from merged PRs; merge trail is the changelog; no hand-maintained file in this repo)
+- [x] Avoid adding a release automation system unless it materially improves maintenance.  (reviewed: `reusable-release.yml` **kept** — product repos need reproducible tagged releases; dry-run-first usage documented; illustrative until first real run)
 
-**Acceptance criteria:** Consumers can identify stable versions and assess changes before upgrading.
+**Acceptance criteria: MET —** consumers can identify stable versions and
+assess changes before upgrading.
 
 ### P4.2 — Reusable workflow compatibility
 
-- [ ] Define a stable reference strategy for reusable workflows.
-- [ ] Document immutable SHA references versus maintained version tags.
-- [ ] Establish a process for publishing compatible updates.
-- [ ] Define how breaking changes are announced.
-- [ ] Verify examples use the documented reference strategy.
+- [x] Define a stable reference strategy for reusable workflows.  (`@main` default, SHA for change control, tags for snapshots)
+- [x] Document immutable SHA references versus maintained version tags.  (in release-conventions; SHA resolution command included)
+- [x] Establish a process for publishing compatible updates.  (cut PR `develop` → `main` = the release event; tags cut from `main` at milestones)
+- [x] Define how breaking changes are announced.  (breaking-change process above)
+- [x] Verify examples use the documented reference strategy.  (all three examples call `@main` ✓)
+
+**Acceptance criteria: MET —** reference strategy documented and consistent
+with the examples.
 
 **Acceptance criteria:** Consumers can deliberately choose and update workflow versions.
 
@@ -217,13 +221,14 @@ recorded as a pending org decision rather than silently resolved.
 
 ### P5.1 — Integration guide
 
-- [ ] Write a step-by-step guide for adopting the organization standards.
-- [ ] Explain which files GitHub automatically discovers from the special `.github` repository and which require explicit integration.
-- [ ] Include reusable workflow caller examples.
-- [ ] Explain repository-specific overrides and limitations.
-- [ ] Provide a checklist for maintainers adopting the standards.
+- [x] Write a step-by-step guide for adopting the organization standards.  (`docs/integration-guide.md`)
+- [x] Explain which files GitHub automatically discovers from the special `.github` repository and which require explicit integration.  (auto table vs adopt table)
+- [x] Include reusable workflow caller examples.  (linked from the guide)
+- [x] Explain repository-specific overrides and limitations.  (GHAS constraints, CodeQL gating, runs-on, Rust/Tauri roadmap note)
+- [x] Provide a checklist for maintainers adopting the standards.  (bottom of the guide)
 
-**Acceptance criteria:** A maintainer can distinguish automatic organization defaults from features that must be configured in each repository.
+**Acceptance criteria: MET —** automatic defaults are distinguished from
+explicit adoption throughout.
 
 ### P5.2 — Pilot repository
 
@@ -253,13 +258,21 @@ recorded as a pending org decision rather than silently resolved.
 
 ### P5.3 — Gradual rollout
 
-- [ ] Inventory repositories eligible for adoption.
-- [ ] Prioritize by activity, risk, and technical compatibility.
-- [ ] Track adoption status and blockers.
-- [ ] Document migration steps and rollback instructions.
-- [ ] Roll out incrementally and verify each integration.
+- [x] Inventory repositories eligible for adoption.  (2026-10-28: org holds exactly 2 repos — `.github` itself and `core`. Nothing else can adopt until new repos are created; product repos live outside the org by decision)
+- [x] Prioritize by activity, risk, and technical compatibility.  (`core` first (pilot, done); `.github` self-hosts the validation workflow; no other candidates)
+- [x] Track adoption status and blockers.  (table below)
+- [x] Document migration steps and rollback instructions.  (`docs/integration-guide.md` for adoption; rollback = re-point caller ref to a previous SHA — see `docs/release-conventions.md`)
+- [x] Roll out incrementally and verify each integration.  (verified per-repo via actual runs: core PR #1 run 40735933843; .github run 40744114836)
 
-**Acceptance criteria:** Adoption is traceable and reversible; repositories are not changed blindly in bulk.
+**Adoption status:**
+
+| Repository | Security caller | Validation workflow | Dependabot | Notes |
+|---|---|---|---|---|
+| `hidden-tokens/.github` | n/a (hosts the reusables) | ✅ self-hosted (run 40744114836) | ✅ | The platform repo itself |
+| `hidden-tokens/core` | ✅ pilot (run 40735933843) | — (no own workflows yet) | ❌ pending | Open-core repo; add validation caller at next touch |
+
+**Acceptance criteria: MET —** adoption is traceable (runs cited) and
+reversible (SHA re-pin); no bulk changes were made.
 
 ---
 
