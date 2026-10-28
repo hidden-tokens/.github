@@ -20,7 +20,7 @@ absence of a file is a decision, not an oversight.
 
 | File | Reason |
 |---|---|
-| `LICENSE` | Licensing is an explicit org decision that has not been made yet. Adding one silently would be a legal/policy decision made by nobody. **Open decision for the org owner.** Note: without a license, the public repo is "all rights reserved" by default. |
+| `LICENSE` | **Decision made (2026-10-28): stay closed.** No license is added; the public repo is "all rights reserved" by default. Anyone wanting to reuse this org's material must ask. Revisit only if the org owner changes this decision. |
 | `FUNDING.yml` | No funding accounts are in use. Add only when a real funding target exists. |
 | `CITATION.cff` | Citation metadata is for research artifacts; a workflow platform repo has nothing citable. |
 | `GOVERNANCE.md` | Governance is currently "the org owner decides" — written down here rather than in a formal file. Revisit if maintainers are added. |
