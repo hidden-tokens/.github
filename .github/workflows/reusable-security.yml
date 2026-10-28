@@ -70,7 +70,7 @@ jobs:
           # PRs: scan pull-request diff. Push: scan full history.
           base: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
           head: ${{ github.event_name == 'pull_request' && 'HEAD' || '' }}
-          extra_args: --only-verified --no-update
+          extra_args: --only-verified
 
   dependency-review:
     name: Dependency review
