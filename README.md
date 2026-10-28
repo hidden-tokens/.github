@@ -13,6 +13,7 @@ This repository holds the organization-wide defaults for all [hidden-tokens](htt
 | [`SUPPORT.md`](SUPPORT.md) | Where to get help |
 | [`.github/workflows/reusable-ci.yml`](.github/workflows/reusable-ci.yml) | Reusable CI pipeline — lint, typecheck, test, build |
 | [`.github/workflows/reusable-security.yml`](.github/workflows/reusable-security.yml) | Reusable security pipeline — secret scan, dependency review, optional CodeQL |
+| [`.github/workflows/reusable-release.yml`](.github/workflows/reusable-release.yml) | Reusable release pipeline — git-cliff changelog, tag guard, GitHub Release |
 
 Individual product repositories may override any of these by providing their own copy.
 

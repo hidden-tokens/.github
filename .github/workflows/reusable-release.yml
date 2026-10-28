@@ -1,0 +1,172 @@
+---
+name: Release (reusable)
+
+# Reusable release pipeline for hidden-tokens repositories.
+#
+# Usage from a repository's own workflow:
+#
+#   name: Release
+#   on:
+#     workflow_dispatch:
+#       inputs:
+#         version:
+#           description: Tag name to release (e.g. v1.2.3)
+#           required: true
+#   jobs:
+#     release:
+#       uses: hidden-tokens/.github/.github/workflows/reusable-release.yml@develop
+#       with:
+#         tag: ${{ inputs.version }}
+#         changelog: true
+#
+# Flow (repo branching convention: feature → develop, develop → main):
+#   1. Run on the integration branch and release a --dry-run first to inspect
+#      the generated changelog in the logs.
+#   2. Run for real: tag + GitHub Release are cut on the trigger-ref branch's
+#      code, with notes from Conventional Commits.
+#   3. Merge the release state into main (develop → main) so the release
+#      commuter is closed.
+#
+# Guard: tags are unique — existing tag aborts the run (no overwrite).
+# Works free-tier (uses gh + git, nothing beyond permissions below).
+
+on:
+  workflow_call:
+    inputs:
+      tag:
+        description: Tag name to release (e.g. v1.2.3 — required unless dry-run)
+        type: string
+        default: ""
+      title:
+        description: Release title — defaults to the tag name
+        type: string
+        default: ""
+      changelog:
+        description: Regenerate CHANGELOG.md from Conventional Commits before tagging
+        type: boolean
+        default: false
+      dry-run:
+        description: Compute changelog + tag, log everything, release nothing
+        type: boolean
+        default: false
+      generate-notes:
+        description: Let GitHub auto-generate release notes (ignored when changelog is true)
+        type: boolean
+        default: true
+      prerelease:
+        description: Publish as a pre-release
+        type: boolean
+        default: false
+      draft:
+        description: Create the release as a draft for manual review before publishing
+        type: boolean
+        default: false
+      runs-on:
+        description: Runner to execute on
+        type: string
+        default: ubuntu-latest
+    outputs:
+      tag:
+        description: Tag processed in this run (input when dry-run, pushed when real)
+        value: ${{ jobs.release.outputs.tag }}
+      release-url:
+        description: URL of the created release (empty on dry-run)
+        value: ${{ jobs.release.outputs.release-url }}
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Changelog · tag · GitHub Release
+    runs-on: ${{ inputs.runs-on }}
+    outputs:
+      tag: ${{ steps.set.outputs.tag }}
+      release-url: ${{ steps.gh-release.outputs.url }}
+    steps:
+      - name: Validate inputs
+        if: inputs.tag == '' && !inputs.dry-run
+        run: |
+          echo "::error::'tag' is required — only dry-run can omit it"
+          exit 1
+
+      - name: Check out repository (full history for changelog)
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          # Releases are cut from the tag-less branch state
+          persist-credentials: true
+
+      - name: Guard against existing tag
+        id: guard
+        if: inputs.tag != ''
+        run: |
+          if [ -n "$(git ls-remote --tags origin "refs/tags/${{ inputs.tag }}")" ]; then
+            echo "::error::Tag '${{ inputs.tag }}' already exists on origin — releases are immutable. Bump the version."
+            exit 1
+          fi
+          echo "tag-safe" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Resolve tag for dry-run
+        id: set
+        run: |
+          if [ -z "${{ inputs.tag }}" ]; then
+            echo "tag=v0.0.0-dryrun" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate/update CHANGELOG.md (git-cliff)
+        if: inputs.changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --latest --strip header
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OUTPUT: CHANGELOG.md
+        # git-cliff works on Conventional Commits; a repo without a cliff.toml
+        # falls back to embedded defaults — no failure.
+
+      - name: Preview generated changelog (dry-run)
+        if: inputs.dry-run && inputs.changelog
+        run: |
+          echo '### Changelog preview' >> "$GITHUB_STEP_SUMMARY"
+          head -60 CHANGELOG.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+
+      - name: Push tag
+        if: '!inputs.dry-run'
+        run: |
+          git tag "${{ steps.set.outputs.tag }}"
+          git push origin "${{ steps.set.outputs.tag }}"
+          echo "Tagged \`${{ steps.set.outputs.tag }}\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create GitHub Release
+        id: gh-release
+        if: '!inputs.dry-run'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release_args=(
+            "${{ steps.set.outputs.tag }}"
+            --title "${{ inputs.title || steps.set.outputs.tag }}"
+          )
+          if [ ${{ inputs.changelog }} = true ] && [ -f CHANGELOG.md ]; then
+            release_args+=(--notes-file CHANGELOG.md)
+          elif [ ${{ inputs.generate-notes }} = true ]; then
+            release_args+=(--generate-notes)
+          fi
+          [ "${{ inputs.prerelease }}" = true ] && release_args+=(--prerelease)
+          [ "${{ inputs.draft }}" = true ] && release_args+=(--draft)
+          URL=$(gh release create "${release_args[@]}")
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "$URL" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Summarize (dry-run)
+        if: inputs.dry-run
+        run: |
+          {
+            echo '### Dry-run'
+            echo "- tag: \`${{ steps.set.outputs.tag }}\`"
+            echo '- No tag or release published'
+          } >> "$GITHUB_STEP_SUMMARY"
