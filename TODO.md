@@ -377,8 +377,11 @@ resolution steps, all field-tested.
 4. **Branch rulesets** — guidance documented (P6.2); **applied 2026-10-28**:
    `protect-main` ruleset active on both `.github` and `core` (`main`: PRs
    required, no force-push, no deletion; 0 required approvals per the
-   single-maintainer reality; code-owner review wired on `.github`).
-   Direct-push rejection verified empirically on `core`.
+   single-maintainer reality). Lesson from the first cut under the ruleset:
+   `require_code_owner_review: true` blocks a solo maintainer (you cannot
+   approve your own PR), so it stays off — code-owner *routing* still happens
+   automatically, it just isn't a merge gate. Direct-push rejection verified
+   empirically on `core`.
 5. **Dependabot on `hidden-tokens/core`** — pending next touch of the pilot
    repo (P5.3 table).
 
