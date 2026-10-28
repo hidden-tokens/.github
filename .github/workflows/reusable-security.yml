@@ -6,17 +6,8 @@ on:
         description: Runner to execute on
         type: string
         default: ubuntu-latest
-      codeql-languages:
-        description: Comma-separated languages for CodeQL analysis — empty string skips CodeQL
-        type: string
-        default: ""
-      codeql-queries:
-        description: Additional CodeQL query set (security-extended, security-and-quality)
-        type: string
-        default: security-extended
 permissions:
   contents: read
-  security-events: write
   pull-requests: read
 jobs:
   probe:
