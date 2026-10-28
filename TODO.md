@@ -69,12 +69,15 @@ before the contract was adopted. They do **not** yet satisfy the P2.2/P2.3 accep
 
 ### P2.1 — Repository audit
 
-- [ ] Inspect current files, branch state, and existing workflows.
-- [ ] Identify supported languages, package managers, and actual CI requirements across Hidden Tokens repositories.
-- [ ] Document which checks are universal and which require caller-provided configuration.
-- [ ] Avoid duplicating workflows that already work well in individual repositories.
+- [x] Inspect current files, branch state, and existing workflows.
+- [x] Identify supported languages, package managers, and actual CI requirements across Hidden Tokens repositories.
+- [x] Document which checks are universal and which require caller-provided configuration.
+- [x] Avoid duplicating workflows that already work well in individual repositories.
 
-**Acceptance criteria:** A short compatibility matrix exists before reusable workflows are designed.
+**Status 2026‑10‑28:** matrix recorded in `docs/compatibility-matrix.md`; branch
+`docs/compatibility-matrix`, merged to `develop`. Key finding: the org holds only 2 repos — the
+product surface is spread across member scopes, so nothing auto-applies outside `hidden-tokens`.
+Pilot preselected: `hidden-tokens/bttf` (after the P2.2/P2.3 retrofit).
 
 ### P2.2 — Reusable CI workflow
 
