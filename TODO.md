@@ -384,6 +384,11 @@ resolution steps, all field-tested.
    empirically on `core`.
 5. **Dependabot on `hidden-tokens/core`** — pending next touch of the pilot
    repo (P5.3 table).
+6. **Agent instructions & local cache ignore** — aligned with `nanomizer`
+   (PRs #172/#173): canonical `AGENTS.md` + pointers `CLAUDE.md` / `GEMINI.md`,
+   `opencode.json` (graft MCP), `.ignore` (greppable graft), and `.gitignore`
+   ignoring local IDE/agent folders (`.claude/`, `.cursor/`, `.gemini/`,
+   `.grok/`, `.kiro/`, `.serena/`, `.mcp.json`). Branch `chore/gitignore-agent-configs`.
 
 **Definition of done: MET** — accurate community standards, documented and
 run-verified reusable workflows, validated examples, adopted security
