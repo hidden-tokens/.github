@@ -1,1 +1,12 @@
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+# Configs d'agents/IDE régénérées par `graft init` sur chaque machine
+# (*.cursor/hooks.json contient un chemin absolu local).
+.claude/
+.cursor/
+.gemini/
+.grok/
+.kiro/
 .serena/
+.mcp.json
