@@ -70,7 +70,7 @@ jobs:
           fetch-depth: 0
 
       - name: Scan for verified secrets
-        uses: trufflesecurity/trufflehog@0301dc36bd6762d2a20a8317ae00375eb5ba90a9  # main HEAD, 2026-10-28
+        uses: trufflesecurity/trufflehog@188766766fd81cde66e5500b0db0379235637134  # main HEAD, 2026-10-28
         with:
           path: ./
           # PRs: scan pull-request diff. Push: scan full history.
@@ -108,13 +108,13 @@ jobs:
         uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a  # main HEAD, 2026-10-28
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@064910ba27454a2e49b06301d31c8bdb6260942f  # main HEAD, 2026-10-28
+        uses: github/codeql-action/init@3ea37a44b6e4e6847c46edae209410d258d548d1  # main HEAD, 2026-10-28
         with:
           languages: ${{ inputs.codeql-languages }}
           queries: ${{ inputs.codeql-queries }}
 
       - name: Autobuild
-        uses: github/codeql-action/autobuild@064910ba27454a2e49b06301d31c8bdb6260942f  # main HEAD, 2026-10-28
+        uses: github/codeql-action/autobuild@3ea37a44b6e4e6847c46edae209410d258d548d1  # main HEAD, 2026-10-28
 
       - name: Analyze
-        uses: github/codeql-action/analyze@064910ba27454a2e49b06301d31c8bdb6260942f  # main HEAD, 2026-10-28
+        uses: github/codeql-action/analyze@3ea37a44b6e4e6847c46edae209410d258d548d1  # main HEAD, 2026-10-28
